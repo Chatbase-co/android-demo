@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.chatbase.sdk.Chatbase
 import com.chatbase.sdk.ChatbaseClient
 import com.chatbase.sdk.ConversationListState
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,23 +32,6 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     var conversationList: ConversationListState? = null
         private set
 
-    /** Non-null when the get_spell_damage tool is waiting for user to pick a spell. */
-    private val _spellPickerRequest = MutableStateFlow<CompletableDeferred<String>?>(null)
-    val spellPickerRequest: StateFlow<CompletableDeferred<String>?> = _spellPickerRequest.asStateFlow()
-
-    val spellOptions = listOf("Fireball", "Thunderstrike", "Blizzard", "Shadow Bolt", "Holy Nova")
-
-    fun onSpellPicked(spell: String) {
-        _spellPickerRequest.value?.complete(spell)
-        _spellPickerRequest.value = null
-    }
-
-    fun onSpellPickerDismissed() {
-        // If dismissed without picking, default to random
-        _spellPickerRequest.value?.complete(spellOptions.random())
-        _spellPickerRequest.value = null
-    }
-
     fun connect(agentId: String) {
         if (agentId.isBlank()) {
             _state.update { it.copy(error = "Agent ID cannot be empty") }
@@ -64,14 +46,6 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         }
         client = newClient
         conversationList = ConversationListState(newClient)
-
-        newClient.tool("get_spell_damage") { _ ->
-            val deferred = CompletableDeferred<String>()
-            _spellPickerRequest.value = deferred
-            val spell = deferred.await()
-            val damage = (5000..10000).random()
-            mapOf("spell" to spell, "damage" to damage)
-        }
 
         _state.update {
             it.copy(

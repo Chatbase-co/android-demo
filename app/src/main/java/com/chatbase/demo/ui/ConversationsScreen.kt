@@ -38,9 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -65,21 +63,8 @@ fun ConversationsScreen(
     onLoadMore: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
-    var showSettings by remember { mutableStateOf(false) }
-
     LaunchedEffect(Unit) {
         onLoadConversations()
-    }
-
-    if (showSettings) {
-        SettingsDialog(
-            deviceId = appState.deviceId,
-            isIdentified = appState.isIdentified,
-            currentUserId = appState.currentUserId,
-            onDismiss = { showSettings = false },
-            onIdentify = { /* handled externally */ },
-            onLogout = { /* handled externally */ }
-        )
     }
 
     Scaffold(
@@ -95,10 +80,7 @@ fun ConversationsScreen(
                         )
                     },
                     actions = {
-                        IconButton(onClick = {
-                            showSettings = true
-                            onSettingsClick()
-                        }) {
+                        IconButton(onClick = onSettingsClick) {
                             Icon(
                                 Icons.Default.Settings,
                                 contentDescription = "Settings",

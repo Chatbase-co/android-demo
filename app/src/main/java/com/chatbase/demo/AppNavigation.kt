@@ -1,7 +1,6 @@
 package com.chatbase.demo
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,24 +17,14 @@ import com.chatbase.demo.ui.ChatScreen
 import com.chatbase.demo.ui.ConversationsScreen
 import com.chatbase.demo.ui.SetupScreen
 import com.chatbase.demo.ui.SettingsDialog
-import com.chatbase.demo.ui.SpellPickerDialog
 import com.chatbase.demo.viewmodel.AppViewModel
 import com.chatbase.demo.viewmodel.ChatViewModel
-
-private const val DEMO_AGENT_ID = "5QHA6VB-DIAbBhxwqxfdi"
 
 @Composable
 fun AppNavigation(appViewModel: AppViewModel = viewModel()) {
     val navController = rememberNavController()
     val appState by appViewModel.state.collectAsStateWithLifecycle()
     var showSettings by remember { mutableStateOf(false) }
-
-    // Auto-connect on launch
-    LaunchedEffect(Unit) {
-        if (!appState.isConnected) {
-            appViewModel.connect(DEMO_AGENT_ID)
-        }
-    }
 
     if (showSettings) {
         SettingsDialog(
@@ -52,18 +41,9 @@ fun AppNavigation(appViewModel: AppViewModel = viewModel()) {
         )
     }
 
-    val spellPickerRequest by appViewModel.spellPickerRequest.collectAsStateWithLifecycle()
-    if (spellPickerRequest != null) {
-        SpellPickerDialog(
-            spells = appViewModel.spellOptions,
-            onSpellSelected = { spell -> appViewModel.onSpellPicked(spell) },
-            onDismiss = { appViewModel.onSpellPickerDismissed() }
-        )
-    }
-
     NavHost(
         navController = navController,
-        startDestination = "conversations"
+        startDestination = "setup"
     ) {
         composable("setup") {
             SetupScreen(

@@ -87,7 +87,7 @@ fun MessageBubble(
                 }
             }
 
-            AnimatedVisibility(visible = !isUser && !message.isStreaming && message.messageId != null) {
+            AnimatedVisibility(visible = message.isError && message.messageId != null) {
                 IconButton(
                     onClick = { onRetry(message.messageId) },
                     modifier = Modifier.size(28.dp)
