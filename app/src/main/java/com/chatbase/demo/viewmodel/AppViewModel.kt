@@ -60,7 +60,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
         val newClient = Chatbase.create(getApplication()) {
             this.agentId = agentId
-            this.baseUrl = "https://chatbase-git-cha-1989-add-sdks-channels.chatbase.fyi/api/sdk/agents"
+            this.baseUrl = "https://www.chatbase.co"
         }
         client = newClient
         conversationList = ConversationListState(newClient)
@@ -97,6 +97,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                         error = null
                     )
                 }
+                loadConversations()
             } catch (e: Exception) {
                 _state.update { it.copy(error = "Identify failed: ${e.message}") }
             }
@@ -108,6 +109,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         _state.update {
             it.copy(isIdentified = false, currentUserId = null)
         }
+        loadConversations()
     }
 
     fun newConversation() {

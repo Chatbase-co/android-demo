@@ -27,9 +27,8 @@ A demo Android app showcasing the [Chatbase Android SDK](https://github.com/nich
 
 4. **Set your API base URL** — open `app/src/main/java/com/chatbase/demo/viewmodel/AppViewModel.kt` and update the base URL:
    ```kotlin
-   this.baseUrl = "https://your-chatbase-server.com/api/sdk/agents"
+   this.baseUrl = "https://www.chatbase.co"
    ```
-   The default (`http://10.0.2.2:3000/api/sdk/agents`) points to `localhost:3000` on the host machine via the Android emulator's loopback address.
 
 5. **Run the app** — select an emulator or connected device and click **Run** (or press `Shift+F10`).
 
